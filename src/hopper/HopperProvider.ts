@@ -138,7 +138,9 @@ export class HopperProvider implements AnalysisProviderCandidate {
             ? "MIPS"
             : target.architecture === "riscv"
               ? "RISC-V"
-              : "PowerPC"
+              : target.architecture === "powerpc"
+                ? "PowerPC"
+                : "SuperH"
         } targets.`,
         diagnostics,
       };

@@ -6,6 +6,7 @@ import type {
   PeCodeViewRecord,
   RiscvElfMetadata,
   PowerPcElfMetadata,
+  SuperHElfMetadata,
   UniversalMachOSlice,
 } from "./binaryTargetTypes.js";
 import { err, ok, type Result } from "./result.js";
@@ -36,6 +37,12 @@ export type ExecutableMetadata =
       readonly architecture: "powerpc";
       readonly availableArchitectures: readonly "powerpc"[];
       readonly powerpc: PowerPcElfMetadata;
+    }
+  | {
+      readonly format: "elf";
+      readonly architecture: "superh";
+      readonly availableArchitectures: readonly "superh"[];
+      readonly superh: SuperHElfMetadata;
     }
   | {
       readonly format: "mach-o" | "elf" | "dos-mz" | "dos-com";
@@ -213,7 +220,8 @@ const parseElf = (
   if (
     architecture === "mips" ||
     architecture === "riscv" ||
-    architecture === "powerpc"
+    architecture === "powerpc" ||
+    architecture === "superh"
   ) {
     const flagsOffset = elfClass === 32 ? 36 : 48;
     const metadata: ElfFamilyMetadata = {
@@ -224,6 +232,13 @@ const parseElf = (
         ? bytes.readUInt32LE(flagsOffset)
         : bytes.readUInt32BE(flagsOffset),
     };
+    if (architecture === "superh")
+      return ok({
+        format: "elf",
+        architecture,
+        availableArchitectures: [architecture],
+        superh: metadata,
+      });
     if (architecture === "powerpc")
       return ok({
         format: "elf",
@@ -557,6 +572,8 @@ const elfArchitecture = (
       return "powerpc";
     case 40:
       return "arm";
+    case 42: // EM_SH; byte order and e_flags remain separate ELF declarations.
+      return "superh";
     case 183:
       return "arm64";
     case 243: // EM_RISCV: XLEN, byte order and e_flags remain separate ELF facts.

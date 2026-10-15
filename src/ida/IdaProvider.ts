@@ -121,7 +121,9 @@ export class IdaProvider implements AnalysisProviderCandidate {
             ? "MIPS"
             : target.architecture === "riscv"
               ? "RISC-V"
-              : "PowerPC"
+              : target.architecture === "powerpc"
+                ? "PowerPC"
+                : "SuperH"
         } lane. Select a supported Ghidra profile instead.`,
         diagnostics,
       };

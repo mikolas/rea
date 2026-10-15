@@ -10,6 +10,7 @@ export const BINARY_ARCHITECTURES = [
   "6502",
   "riscv",
   "powerpc",
+  "superh",
 ] as const;
 export type BinaryArchitecture = (typeof BINARY_ARCHITECTURES)[number];
 
@@ -38,6 +39,7 @@ export const ELF_METADATA_ARCHITECTURES = [
   "mips",
   "riscv",
   "powerpc",
+  "superh",
 ] as const satisfies readonly BinaryArchitecture[];
 export type ElfMetadataArchitecture =
   (typeof ELF_METADATA_ARCHITECTURES)[number];
@@ -105,6 +107,9 @@ export type RiscvElfMetadata = ElfFamilyMetadata;
 /** Raw PowerPC declarations; family identity does not select a processor variant. */
 export type PowerPcElfMetadata = ElfFamilyMetadata;
 
+/** Raw SuperH declarations; family identity does not select an SH-1..SH-4 variant. */
+export type SuperHElfMetadata = ElfFamilyMetadata;
+
 /** Byte range of the selected slice inside its universal Mach-O container. */
 export interface UniversalMachOSlice {
   readonly offset: number;
@@ -161,6 +166,15 @@ export type BinaryTarget =
       readonly architecture: "powerpc";
       readonly availableArchitectures: readonly "powerpc"[];
       readonly powerpc: PowerPcElfMetadata;
+      readonly executableRole?: never;
+      readonly managed?: never;
+    })
+  | (BinaryTargetIdentity & {
+      readonly kind: "executable";
+      readonly format: "elf";
+      readonly architecture: "superh";
+      readonly availableArchitectures: readonly "superh"[];
+      readonly superh: SuperHElfMetadata;
       readonly executableRole?: never;
       readonly managed?: never;
     })

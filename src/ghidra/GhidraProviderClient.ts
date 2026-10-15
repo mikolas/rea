@@ -73,6 +73,7 @@ import {
   isGhidraMipsSoftFloatTarget,
 } from "./GhidraMipsProfile.js";
 import { ghidraRiscvLimitations } from "./GhidraRiscvProfile.js";
+import { ghidraSuperHLimitations } from "./GhidraSuperHProfile.js";
 import { ghidraPePdbLimitations } from "./GhidraPeProfile.js";
 import { unverifiedGhidraBuildLimitation } from "./GhidraInstallationPolicy.js";
 import { GhidraHeadlessLauncher } from "./GhidraLauncher.js";
@@ -564,6 +565,7 @@ export const createGhidraProviderClient = (input: {
     ...ghidraMipsRelocatableLimitations(target),
     ...ghidraMipsSharedLimitations(target),
     ...ghidraRiscvLimitations(target),
+    ...ghidraSuperHLimitations(target),
   ];
   const providerLimitations =
     installation.platform === "win32"

@@ -112,6 +112,7 @@ const HOPPER_DECLINED_ARCHITECTURE_LABELS: Record<
   mips: "MIPS",
   riscv: "RISC-V",
   powerpc: "PowerPC",
+  superh: "SuperH",
 };
 
 /** Derive Hopper's complete non-interactive CLI loader selection. */
